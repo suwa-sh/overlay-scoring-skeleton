@@ -1,0 +1,122 @@
+# Round-trip fixture: ai-delegation-readiness の four-layer 定義を、canonical な
+# 「フラット items + `.` セパレータ(1 階層固定)」モデルへ移行したもの。
+#   - layers[]        -> group ヘッダ L1..L4(name/purpose と group レベル数値 pass/revise を持つ)
+#   - layers[].questions -> leaf L1.Q1 ...(text/weight)
+#   - efficacy_axis   -> group ヘッダ efficacy + leaf efficacy.E1 ...
+#   - verdict_thresholds -> ヘッダ行の group 数値 pass/revise(strengthen 対象・direction higher)
+#   - case_evidence   -> ヘッダ行の opaque payload(engine は解釈しない)
+version: 1
+name: four-layer-delegation-readiness
+separator: "."
+description: |
+  4 layer prerequisites for delegating high-risk routine business judgments
+  to AI agents. Lower layers must hold before upper layers can succeed.
+
+extension_points:
+  - {group: "L*", allow: add}                                        # 既存 L* 層に質問を追加
+  - {group: "efficacy", allow: add}                                  # 効果測定に質問を追加
+  - {group: "L*", level: group, field: pass, allow: strengthen, direction: higher}
+  - {group: "L*", level: group, field: revise, allow: strengthen, direction: higher}
+  - {group: "efficacy", level: group, field: pass, allow: strengthen, direction: higher}
+  - {group: "efficacy", level: group, field: revise, allow: strengthen, direction: higher}
+
+items:
+  # --- L1 ---
+  - id: "L1"
+    name: business_standardization
+    name_ja: 業務標準化層
+    purpose: The foundation. Judgment criteria documented; exceptions as explicit procedures; rule book versioned.
+    pass: 1.0
+    revise: 0.5
+    case_evidence:
+      - text: Ajinomoto Group operates as accounting BPO with continuous standardization
+        confidence: observed_fact
+        source: "https://www.itmedia.co.jp/business/articles/2606/19/news033.html"
+  - id: "L1.Q1"
+    text: Are the judgment criteria documented and free from tacit knowledge?
+    weight: 1.0
+  - id: "L1.Q2"
+    text: Are exceptions explicitly defined as procedures (not implicit)?
+    weight: 1.0
+  - id: "L1.Q3"
+    text: Is the rule book versioned (revision date, reason, history)?
+    weight: 1.0
+  - id: "L1.Q4"
+    text: Is the SOP written at a granularity that a third party can reproduce?
+    weight: 1.0
+  # --- L2 ---
+  - id: "L2"
+    name: judgment_structuring
+    name_ja: 判断構造化層
+    purpose: Map each rule clause to (which input, which condition, which decision).
+    pass: 1.0
+    revise: 0.66
+  - id: "L2.Q1"
+    text: Can each rule clause be mapped to (which input, which condition, which decision)?
+    weight: 1.0
+  - id: "L2.Q2"
+    text: Is there a clear line between deterministic processing, LLM inference, and human escalation?
+    weight: 1.0
+  - id: "L2.Q3"
+    text: Is a regression test in place to detect accuracy degradation when the logic changes?
+    weight: 1.0
+  # --- L3 ---
+  - id: "L3"
+    name: delegation_scope
+    name_ja: 委任範囲層
+    purpose: Restrict delegation to judgments whose answer is definable and verdict verifiable.
+    pass: 1.0
+    revise: 0.75
+  - id: "L3.Q1"
+    text: Can a third party score the same input the same way?
+    weight: 1.0
+  - id: "L3.Q2"
+    text: Can the rationale link to a specific clause (or SOP step) of the rule book?
+    weight: 1.0
+  - id: "L3.Q3"
+    text: Are out-of-scope domains (ethical, novel-policy) excluded from delegation?
+    weight: 1.0
+  - id: "L3.Q4"
+    text: Can the verdict be reproduced later from the audit log?
+    weight: 1.0
+  # --- L4 ---
+  - id: "L4"
+    name: control_and_traceability
+    name_ja: 統制・追跡層
+    purpose: Design the human-in-the-loop control point, audit log, and correction flow.
+    pass: 1.0
+    revise: 0.6
+  - id: "L4.Q1"
+    text: Are decision and execution separated so segregation of duties is maintained?
+    weight: 1.0
+  - id: "L4.Q2"
+    text: Can the rationale be retrieved from logs (referenced rule + checked items)?
+    weight: 1.0
+  - id: "L4.Q3"
+    text: Does the audit log record Who/When/What/Why/Result as a structured schema?
+    weight: 1.0
+  - id: "L4.Q4"
+    text: Is the rule version pinned in the log so past verdicts can be re-verified?
+    weight: 1.0
+  - id: "L4.Q5"
+    text: Is the correction flow for false approvals designed and logged?
+    weight: 1.0
+  # --- efficacy (4 層と並列の独立観点) ---
+  - id: "efficacy"
+    name: efficacy_measurement
+    name_ja: 効果測定
+    purpose: Even if the 4 layers hold, efficacy figures must be defensible (denominator, baseline, period).
+    pass: 1.0
+    revise: 0.75
+  - id: "efficacy.E1"
+    text: Can you describe the denominator, baseline, and time period of the reduction figure?
+    weight: 1.0
+  - id: "efficacy.E2"
+    text: Are expected and actual figures separated (vendor estimate vs in-house measurement)?
+    weight: 1.0
+  - id: "efficacy.E3"
+    text: Is the figure scoped to all-of-process or part-of-process (and is that scope stated)?
+    weight: 1.0
+  - id: "efficacy.E4"
+    text: Are AI-caused false approvals and rejections tracked separately from efficiency?
+    weight: 1.0

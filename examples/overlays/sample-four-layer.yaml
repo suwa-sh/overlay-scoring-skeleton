@@ -1,0 +1,14 @@
+# Sample overlay for four-layer-delegation-readiness.
+# A fictional company adds questions and strengthens thresholds. It never
+# overwrites, deletes, or weakens the baseline.
+version: 1
+extends: four-layer-delegation-readiness
+add:
+  - id: "L1.ACME_Q5"
+    text: Has legal approved the rule book within the last 12 months?
+    weight: 1.0
+  - id: "L4.ACME_Q6"
+    text: Is the audit log stored in a tamper-evident store (WORM / hash chain / signed)?
+    weight: 1.0
+strengthen:
+  "L4": {revise: 0.8}   # 0.6 -> 0.8 (stricter, higher is allowed)

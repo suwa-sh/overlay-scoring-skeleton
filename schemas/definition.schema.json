@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/suwa-sh/overlay-scoring-skeleton/schemas/definition.schema.json",
+  "title": "overlay-scoring definition",
+  "description": "A readiness / scoring definition as a single flat items list. Item ids are either a group header (no separator) or a leaf (exactly one separator). extension_points declare, per group selector, which items may be added and which numeric fields may be strengthened.",
+  "type": "object",
+  "$defs": {
+    "extension_point": {
+      "type": "object",
+      "properties": {
+        "group": {
+          "type": "string",
+          "description": "Group selector: exact id, prefix family ('L*'), or '*' (all)."
+        },
+        "allow": { "type": "string", "enum": ["add", "strengthen"] },
+        "level": {
+          "type": "string",
+          "enum": ["group", "leaf"],
+          "description": "For strengthen: whether the field is on the group header or on a leaf. Named 'level' (not 'on') because 'on' is a YAML 1.1 boolean keyword. Ignored for add."
+        },
+        "field": { "type": "string", "description": "For strengthen: the numeric field name." },
+        "direction": {
+          "type": "string",
+          "enum": ["lower", "higher"],
+          "description": "For strengthen: the stricter direction. lower = shorter SLA; higher = higher pass threshold."
+        }
+      },
+      "required": ["allow"],
+      "allOf": [
+        {
+          "if": { "properties": { "allow": { "const": "strengthen" } } },
+          "then": { "required": ["field", "direction"] }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "item": {
+      "type": "object",
+      "description": "A group header (id without separator) or a leaf (id with exactly one separator). Leaves may carry arbitrary opaque payload beyond declared numeric fields.",
+      "properties": {
+        "id": { "type": "string", "minLength": 1 }
+      },
+      "required": ["id"],
+      "additionalProperties": true
+    }
+  },
+  "properties": {
+    "version": { "type": "integer" },
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "separator": {
+      "type": "string",
+      "default": ".",
+      "description": "The fixed group/leaf separator. One nesting level only."
+    },
+    "extension_points": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/extension_point" }
+    },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/item" }
+    }
+  },
+  "required": ["version", "name", "items"],
+  "additionalProperties": true
+}

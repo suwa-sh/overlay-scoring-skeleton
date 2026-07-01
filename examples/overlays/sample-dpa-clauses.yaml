@@ -1,0 +1,7 @@
+# Sample overlay for shared-infra-dpa-clauses.
+version: 1
+extends: shared-infra-dpa-clauses
+add:
+  - {id: "clauses.ACME01", title: 自社固有の暗号化条項, requirement: 保存データは AES-256 で暗号化する, required: true}
+strengthen:
+  "clauses.DPA03": {sla_confirmed_hours: 48}   # 72 -> 48 (stricter, lower is allowed)

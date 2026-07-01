@@ -1,0 +1,40 @@
+# Round-trip fixture: shared-infra-incident-readiness の dpa-clauses(元はトップレベル
+# フラット table)を canonical モデルへ移行したもの。単一テーブルは「ヘッダ 1 つ + leaf 群」にする。
+#   - clauses[]              -> group ヘッダ clauses + leaf clauses.DPA01 ...
+#   - clauses[].sla_hours    -> leaf の数値(strengthen 対象・direction lower)
+#   - clauses[].sla_confirmed_hours -> leaf の数値(strengthen 対象・direction lower。72h 確報 SLA)
+#   - title/requirement/required -> leaf の opaque payload
+version: 1
+name: shared-infra-dpa-clauses
+separator: "."
+description: |
+  10 mandatory DPA / outsourcing-contract clauses governing a shared infrastructure.
+  Single source of truth for the contractual notification SLA (24h first report /
+  72h confirmed report between processor and controller).
+
+extension_points:
+  - {group: "clauses", allow: add}                                             # 自社固有の追加条項
+  - {group: "clauses", level: leaf, field: sla_hours, allow: strengthen, direction: lower}
+  - {group: "clauses", level: leaf, field: sla_confirmed_hours, allow: strengthen, direction: lower}
+
+items:
+  - {id: "clauses", label: DPA clauses}   # group ヘッダ
+  - {id: "clauses.DPA01", title: 処理内容の特定, requirement: 目的・種別・カテゴリ・期間を特定する, required: true}
+  - {id: "clauses.DPA02", title: 再委託の事前承認, requirement: 再委託先一覧を維持し、事前承認を要する, required: true}
+  - id: "clauses.DPA03"
+    title: 委託先→委託元 漏えい通知SLA
+    requirement: 24h以内に第一報、72h以内に確報 (GDPR Art.33(2) は without undue delay)
+    required: true
+    sla_hours: 24                    # 第一報
+    sla_confirmed_hours: 72          # 確報
+  - {id: "clauses.DPA04", title: 本人通知の主体明示, requirement: 委託元 / 委託先のどちらが本人通知を行うかを明示する, required: true}
+  - {id: "clauses.DPA05", title: 規制当局通知の主体明示, requirement: 個情委・総務省への通知主体を明示する, required: true}
+  - {id: "clauses.DPA06", title: 監査ログの保持期間と提供義務, requirement: 委託元の要請時に N営業日以内に提供する。保持期間を定める, required: true}
+  - {id: "clauses.DPA07", title: アクセス鍵・パスワードハッシュ管理責任, requirement: ハッシュアルゴリズムを指定し、鍵ローテーションSLAを定める, required: true}
+  - id: "clauses.DPA08"
+    title: 第三者ソフトウェアのパッチ管理
+    requirement: Critical公表後72h以内に暫定対応着手、N日以内に正規パッチ
+    required: true
+    sla_hours: 72                    # Critical CVE 公表後の暫定対応着手期限
+  - {id: "clauses.DPA09", title: インシデント時の合同対応条項, requirement: フォレンジック・広報・法務の役割分担を定める, required: true}
+  - {id: "clauses.DPA10", title: 演習義務, requirement: 年1回以上の Tabletop / Red Team を契約に明記する, required: true}
