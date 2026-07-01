@@ -1,0 +1,4 @@
+# jsonschema[format-nongpl] extra brings rfc3339-validator etc so that
+# "format": "date-time" is actually checked (bare jsonschema treats it as no-op).
+jsonschema[format-nongpl]>=4.21,<5.0
+pyyaml>=6.0

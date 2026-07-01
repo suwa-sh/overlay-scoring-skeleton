@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "overlay-scoring-skeleton"
+version = "0.1.0"
+description = "Starter template + canonical overlay engine for rules-as-data readiness/scoring definitions: flat items with a fixed one-level id separator, safely extensible via add/strengthen overlays."
+requires-python = ">=3.10"
+authors = [{ name = "Shinichi Suwa" }]
+license = { text = "MIT" }
+dependencies = [
+    # [format-nongpl] extra brings rfc3339-validator etc so "format": "date-time"
+    # is actually validated (bare jsonschema treats it as a no-op).
+    "jsonschema[format-nongpl]>=4.21,<5.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0,<9.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
