@@ -42,11 +42,28 @@ strengthen:
   "L1": {revise: 0.8}   # 0.5 -> 0.8 (higher = より厳しい。緩和は拒否される)
 ```
 
+## インストール
+
+ライブラリとして使う場合は PyPI から入れます。
+
+```bash
+pip install overlay-scoring-skeleton
+```
+
+導入すると、利用側は使っているエンジンのバージョンを取得できます。
+
+```python
+import overlay_scoring
+print(overlay_scoring.__version__)
+```
+
 ## Quick start
+
+このリポを clone して開発・テストする場合は、依存を入れてテストを実行します。
 
 ```bash
 python3 -m venv .venv
-./.venv/bin/pip install "pyyaml>=6.0" "jsonschema[format-nongpl]>=4.21,<5.0" "pytest>=8.0,<9.0"
+./.venv/bin/pip install ".[dev]"
 ./.venv/bin/python -m pytest tests/ -q     # 26 tests
 ```
 

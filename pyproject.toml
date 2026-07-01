@@ -6,9 +6,29 @@ build-backend = "setuptools.build_meta"
 name = "overlay-scoring-skeleton"
 version = "0.1.0"
 description = "Starter template + canonical overlay engine for rules-as-data readiness/scoring definitions: flat items with a fixed one-level id separator, safely extensible via add/strengthen overlays."
+readme = "README.md"
 requires-python = ">=3.10"
+license = { file = "LICENSE" }
 authors = [{ name = "Shinichi Suwa" }]
-license = { text = "MIT" }
+keywords = [
+    "overlay",
+    "scoring",
+    "readiness",
+    "rules-as-data",
+    "extensible",
+    "yaml",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Quality Assurance",
+]
 dependencies = [
     # [format-nongpl] extra brings rfc3339-validator etc so "format": "date-time"
     # is actually validated (bare jsonschema treats it as a no-op).
@@ -18,6 +38,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0,<9.0"]
+
+[project.urls]
+Homepage = "https://github.com/suwa-sh/overlay-scoring-skeleton"
+Issues = "https://github.com/suwa-sh/overlay-scoring-skeleton/issues"
+
+[tool.setuptools.package-dir]
+"" = "src"
 
 [tool.setuptools.packages.find]
 where = ["src"]
