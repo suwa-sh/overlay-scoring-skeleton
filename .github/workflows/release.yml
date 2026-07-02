@@ -51,7 +51,10 @@ jobs:
           path: dist/
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@6733eb7d741f0b11ec6a39b58540dab7590f9b7d # v1.14.0
+        # Docker-based action: its runtime image is tagged by release line, not by
+        # commit SHA, so a full-SHA pin fails with "manifest unknown". Pin to the
+        # release/v1 line as recommended by pypa (Dependabot keeps it current).
+        uses: pypa/gh-action-pypi-publish@release/v1
 
   release:
     needs: publish
