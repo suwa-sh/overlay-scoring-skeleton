@@ -1,5 +1,7 @@
 # overlay-scoring-skeleton
 
+![OGP](docs/assets/ogp.png)
+
 rules-as-data な **readiness / scoring 定義**を、組織ごとに**安全に拡張**するための overlay エンジンと定義スキーマの起点テンプレートです。
 
 > readiness / scoring 定義 = チェック項目・閾値・マトリクスなどを、コードではなく YAML データとして書いた評価フレームワークのことです。
